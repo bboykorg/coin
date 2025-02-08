@@ -1,0 +1,5 @@
+            cursor.execute(
+                    "SELECT * FROM \"improvements_energy\" JOIN \"score\" ON \"improvements_energy\".\"ID\" = \"score\".\"energy\"  WHERE \"ID_user\" = %s",
+                    (user_id,))
+                result = cursor.fetchone()
+                energy = result[1]
