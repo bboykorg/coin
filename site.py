@@ -286,8 +286,19 @@ def check_energy():
 
 @app.route('/profile')
 def profile():
+    user_id = request.args.get('user_id', type=int)
+    cards = load_inventory(user_id)
+    return render_template("profile.html", cards=cards)
 
-    return render_template("profile.html")
+
+def load_inventory(user_id):
+    with get_db_connection() as conn:
+        with conn.cursor() as cursor:
+            cursor.execute(
+                "SELECT \"cards\".* FROM \"cards\" JOIN \"inventory\" ON \"cards\".\"ID\" = \"inventory\".\"ID_card\" WHERE \"inventory\".\"ID_user\" = %s",
+                (user_id,))
+            result = cursor.fetchall()
+    return result
 
 if __name__ == '__main__':
     # Запуск фонового процесса для обновления счетчика кликов
